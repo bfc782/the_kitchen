@@ -5,6 +5,7 @@ from operator import contains
 # %%
 count = 0
 board = []
+# with open('21_day4_i.txt','r') as f:
 with open('21_day4_i.txt','r') as f:
     for line in f:
         if count == 0:
@@ -25,7 +26,6 @@ def board_size(x):
             if board[i] == []:
                 return i-1
 
-
 # %%
 board_dim = board_size(board)
 space_shape = board_dim + 1
@@ -40,42 +40,86 @@ for i in range(1,len(board),space_shape):
     boards.append(new_board)
 
 # %%
-check_lists = [] # each board has 2*dim checklists
 found = 0
+count = 0
+r = 5
+while found == 0:
+    # for r in range(board_dim, len(order)): #starts after dim
+    r +=1
+    new_seq = order[:r]
 
-for r in range(board_dim, len(board)): #starts after dim
-    new_seq = np.array(order[:r])
-    # while found < 1:            
-    for i, j in enumerate(boards): # for each board j
-        for k, l in enumerate(j[:]): # for each row, l, in board j
-            check_list_row = []
-            for x in l:
-                for y in new_seq:
-                    check_list_row.append(x==y)
-            if sum(check_list_row)==board_dim:
-                check_lists.append(['board:', i, 'row:', k, 'last call_row:', new_seq[-1], 'draw no:', len(new_seq)])
-        for m, n in enumerate(j.T[:]): # for each col, n, in board j
-            check_list_col = []
-            for x in l:
-                for y in new_seq:
-                    check_list_col.append(x==y)
-            if sum(check_list_col)==board_dim:
-                check_lists.append(['board:', i, 'col:', m, 'last call_col:', new_seq[-1], 'draw no:', len(new_seq)])
+    for i, j in enumerate(boards): # iterate boards j
+        for k, l in enumerate(j[:]): # iterate rows l
+            if len([x for x in l if x in new_seq]) == 5:
+                print('row', 'draw index:', r, 'last draw:', new_seq[-1], 'board:', i)
+                found +=1
+                bd_row = boards[i]
+                drw_row = new_seq
 
-# %%
-draws = new_seq
-undrawn = []
-for i in boards[82][:]: #i is row in array
-    for j in i: #j is element in row
-        test = []
-        for k in draws: # k is drawn number
-            test.append(j==k)            
-        if sum(test) >0:
-            undrawn.append(j)
+        for m, n in enumerate(j.T[:]):
+            if len([y for y in n if y in new_seq]) == 5:
+                print('col', 'draw index:', r, 'last draw:', new_seq[-1], 'board:', i)
+                found += 1   
+                bd_col = boards[i]
+                drw_col = new_seq            
+
 
 # %%
-sum_undrawn = sum(list(set(undrawn)))
-last_draw = check_lists[0][5]
+bd = bd_col
+drw = new_seq
 
-print(sum_undrawn*last_draw)
+undr = []
+for i in bd: #row in board
+    for j in i: # element in row
+        if j not in drw:
+            undr.append(j)
+# %%
+new_seq[-1]*sum(undr)
+# %% Part II
+
+found = 0
+count = 0
+r = 5
+board_found = []
+# for r in range(5,len(order)):
+while found == 0:
+    # for r in range(board_dim, len(order)): #starts after dim
+    r +=1
+    new_seq = order[:r]
+
+    # for i, j in enumerate(boards): # iterate boards j
+    i = 27
+    j = boards[27]    
+    for k, l in enumerate(j[:]): # iterate rows l
+        if len([x for x in l if x in new_seq]) == 5:
+            print('row', 'draw index:', r, 'last draw:', new_seq[-1], 'board:', i)
+            found +=1
+            bd_row = boards[i]
+            drw_row = new_seq
+            board_found.append(i)
+
+    for m, n in enumerate(j.T[:]):
+        if len([y for y in n if y in new_seq]) == 5:
+            print('col', 'draw index:', r, 'last draw:', new_seq[-1], 'board:', i)
+            found += 1   
+            bd_col = boards[i]
+            drw_col = new_seq    
+            board_found.append(i)
+# %%
+found_order = []
+for i, j in enumerate(board_found):
+    if (i > 0) & (j not in board_found[:i - 1]):
+        found_order.append(j)
+    
+# %%
+bd = boards[27]
+drw = order[:85]
+undr = []
+for i in bd: #row in board
+    for j in i: # element in row
+        if j not in drw:
+            undr.append(j)
+sum(undr)
+# %%
+193*66
 # %%
