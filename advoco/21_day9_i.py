@@ -41,4 +41,59 @@ for i, row in enumerate(arr[:]):
         arr_3d[i, j, elem] = 1
 
 # %%
+'''
+each point in a basin will be bound by a 9, or an edge
 
+start from top left:
+- move from left to right, up to down to find first basin point
+    - is point part of basin? i.e. not 9?
+
+'''
+bounds = []
+bounded = []
+for ix, row in enumerate(arr[:5, :5]):
+    bounds.append(np.where(row == 9))
+    bounded.append(np.where(row != 9))
+
+
+# %%
+from itertools import product
+# %%
+def get_children(loc, arr) -> list:
+    
+    adjnt = []
+    row, col = loc
+
+    if row - 1 > 0:
+        if arr[row - 1, col] != 9:
+            adjnt.append((row - 1, col))
+    
+    if row + 1 < arr.shape[0]:
+        if arr[row + 1, col] != 9:
+            adjnt.append((row + 1, col))
+    
+    if col - 1 > 0:
+        if arr[row, col - 1] != 9:
+            adjnt.append((row, col - 1))
+    
+    if col + 1 < arr.shape[0]:
+        if arr[row, col + 1] != 9:
+            adjnt.append((row, col + 1))
+
+    return adjnt 
+
+# %%
+basins = []
+for row_ix, row in enumerate(arr[:5, :5]):
+    for col_ix, col in enumerate(row):
+        if arr[row_ix, col_ix] == 9:
+            pass
+        else:
+            children = get_children((row_ix, col_ix), arr[:5, :5])
+            if not basins:
+                basins.append(children)
+            if children in basins:
+                basins.append(children)
+
+        
+# %%
