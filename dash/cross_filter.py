@@ -1,14 +1,11 @@
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import Dash, html, dcc, Input, Output
 import numpy as np
 import pandas as pd
-from dash.dependencies import Input, Output
 import plotly.express as px
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 # make a sample data frame with 6 columns
 df = pd.DataFrame({"Col " + str(i+1): np.random.rand(30) for i in range(6)})
